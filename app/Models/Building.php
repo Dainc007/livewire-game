@@ -6,7 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-final class Unit extends Model
+final class Building extends Model
 {
     //
 }

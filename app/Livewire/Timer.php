@@ -1,34 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Models\Game;
 use Carbon\Carbon;
 use Livewire\Component;
 
-class Timer extends Component
+final class Timer extends Component
 {
     public Game $game;
-    public $time;
 
-    public function render()
-    {
-        return view('livewire.timer');
-    }
+    public Carbon $time;
 
-    public function mount()
+    public function mount(): void
     {
         $this->time = Carbon::createFromTimeString('00:00:00');
     }
 
-    public function refreshTimer()
+    public function refreshTimer(): void
     {
-        if($this->game->status === 'running') {
+        if ($this->game->status === 'running') {
             $this->time = $this->time->addSecond();
         }
     }
 
-    public function updateGameStatus(string $status)
+    public function updateGameStatus(string $status): void
     {
         $this->game->update(['status' => $status]);
     }

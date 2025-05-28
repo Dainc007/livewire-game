@@ -18,22 +18,9 @@
             <main class="flex-1 container mx-auto p-4">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
                     <!-- Game Board -->
-                    <div class="lg:col-span-3 bg-white rounded-lg shadow-lg p-4">
+                    <div class="lg:col-span-full bg-white rounded-lg shadow-lg p-4">
                         <div class="aspect-square bg-gray-200 rounded-lg">
                             <livewire:game-board />
-                        </div>
-                    </div>
-
-                    <!-- Sidebar -->
-                    <div class="lg:col-span-1 space-y-4">
-                        <!-- Building Controls -->
-                        <div class="bg-white rounded-lg shadow-lg p-4">
-                            <h2 class="text-xl font-bold mb-4">Buildings</h2>
-                            <div class="space-y-2">
-                                <button class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                    Build House
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

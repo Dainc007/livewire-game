@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Enums\GoodType;
+use App\Models\Good;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +22,22 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->timestamps();
         });
+
+        $goods = [];
+        foreach (GoodType::getAllCases() as $goodType) {
+
+            $goods[] = [
+                'name' => $goodType->value,
+                'description' => $goodType->description(),
+                'icon' => $goodType->icon(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        if (! empty($goods)) {
+            Good::insert($goods);
+        }
     }
 
     /**

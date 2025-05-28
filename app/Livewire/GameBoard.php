@@ -1,51 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use Livewire\Component;
 
-class GameBoard extends Component
+final class GameBoard extends Component
 {
-    public $columns = 30;
-    public $rows = 16;
-    public $map = [];
+    public array $map = [];
 
-    public function mount()
+    public int $selectedField;
+
+    public bool $showModal = false;
+
+    public function mount(): void
     {
-        $this->generateHexagonData();
+        $this->generateMap();
     }
 
-    public function generateHexagonData()
+    public function generateMap(): void
     {
-        $this->map = [];
-        $stateIndex = 0;
-
-        for ($col = 0; $col < $this->columns; $col++) {
-            $columnData = [];
-            $maxRowsInColumn = $this->rows;
-
-            for ($row = 0; $row < $maxRowsInColumn; $row++) {
-                $type = $this->determineHexagonType($col, $row);
-
-                $hexagon = [
-                    'id' => "hex-{$col}-{$row}",
-                    'type' => $type,
-                    'icon' => null
+        $id = 1;
+        $this->map = collect(range(0, 29))->map(function ($col) use (&$id) {
+            return collect(range(0, 15))->map(function ($row) use (&$id): array {
+                return [
+                    'id' => $id++,
+                    'classes' => 'hexagon anima success',
+                    'icon' => '',
                 ];
-
-                if ($type === 'anima') {
-                    $hexagon['icon'] = '';
-                }
-
-                $columnData[] = $hexagon;
-            }
-
-            $this->map[] = $columnData;
-        }
+            })->all();
+        })->all();
     }
 
-    private function determineHexagonType()
+    public function selectField(int $id): void
     {
-        return 'anima';
+        $this->showModal = true;
+        $this->selectedField = $id;
     }
 }

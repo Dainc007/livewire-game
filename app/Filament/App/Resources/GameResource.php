@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Filament\Resources;
+declare(strict_types=1);
 
-use App\Filament\Resources\GoodResource\Pages;
-use App\Filament\Resources\GoodResource\RelationManagers;
-use App\Models\Good;
+namespace App\Filament\App\Resources;
+
+use App\Filament\App\Resources\GameResource\Pages;
+use App\Models\Game;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class GoodResource extends Resource
+final class GameResource extends Resource
 {
-    protected static ?string $model = Good::class;
+    protected static ?string $model = Game::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,10 +22,12 @@ class GoodResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('description'),
-                Forms\Components\TextInput::make('icon'),
+                Forms\Components\TextInput::make('status')->default('lobbying')->hidden(),
+                Forms\Components\Select::make('visibility')->options([
+                    'public' => 'Public',
+                    'private' => 'Private',
+                ])->default('public'),
+                Forms\Components\Select::make('users')->multiple()->relationship('users', 'name'),
             ]);
     }
 
@@ -34,11 +35,7 @@ class GoodResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('icon')
+                Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -53,7 +50,6 @@ class GoodResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -67,7 +63,7 @@ class GoodResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageGoods::route('/'),
+            'index' => Pages\ManageGames::route('/'),
         ];
     }
 }

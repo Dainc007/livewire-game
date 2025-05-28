@@ -1,43 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Models\Game;
 use Livewire\Component;
 
-class DateCounter extends Component
+final class DateCounter extends Component
 {
     public Game $game;
-    public $year = 1;
-    public $dayCount = 1;
-    public $isDay = true;
-    public $season = 'winter';
 
-    public function render()
-    {
-        return view('livewire.date-counter');
-    }
+    public int $year = 1;
 
-    public function refreshDate()
+    public int $dayCount = 1;
+
+    public bool $isDay = true;
+
+    public string $season = 'winter';
+
+    public function refreshDate(): void
     {
-        if($this->game->status !== 'running') return;
+        if ($this->game->status !== 'running') {
+            return;
+        }
 
         $this->isDay = ! $this->isDay;
         $this->dayCount++;
 
-        switch ($this->dayCount)
-            {
-            case $this->dayCount < 90:
+        switch (true) {
+            case $this->dayCount <= 81:
                 $this->season = 'winter';
                 break;
-            case $this->dayCount < 180:
+            case $this->dayCount <= 173:
                 $this->season = 'spring';
                 break;
-            case $this->dayCount < 270:
+            case $this->dayCount <= 267:
                 $this->season = 'summer';
                 break;
-            case $this->dayCount < 360:
-                    $this->dayCount = 1;
+            case $this->dayCount <= 356:
+                $this->season = 'autumn';
+                break;
+            case $this->dayCount >= 365:
+                $this->dayCount = 1;
+                $this->year++;
+                $this->season = 'winter';
+                break;
+        }
     }
-}
 }

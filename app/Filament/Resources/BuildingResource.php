@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\GoodResource\Pages;
-use App\Filament\Resources\GoodResource\RelationManagers;
-use App\Models\Good;
+use App\Filament\Resources\BuildingResource\Pages;
+use App\Filament\Resources\BuildingResource\RelationManagers;
+use App\Models\Building;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class GoodResource extends Resource
+class BuildingResource extends Resource
 {
-    protected static ?string $model = Good::class;
+    protected static ?string $model = Building::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -25,8 +25,15 @@ class GoodResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
+                Forms\Components\TextInput::make('type')
+                    ->required(),
                 Forms\Components\TextInput::make('description'),
                 Forms\Components\TextInput::make('icon'),
+                Forms\Components\TextInput::make('cost')
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->prefix('$'),
             ]);
     }
 
@@ -36,10 +43,15 @@ class GoodResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('icon')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('cost')
+                    ->money()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -67,7 +79,7 @@ class GoodResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageGoods::route('/'),
+            'index' => Pages\ManageBuildings::route('/'),
         ];
     }
 }

@@ -1,20 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Good extends Model
+final class Good extends Model
 {
-    protected $fillable = [
-        'name',
-        'icon',
-        'value',
-        'type',
-        'description'
-    ];
+    public function games()
+    {
+        return $this->belongsToMany(Game::class)
+            ->using(GameGood::class)
+            ->withTimestamps();
+    }
 
-    protected $casts = [
-        'value' => 'integer'
-    ];
+    public function users()
+    {
+        return $this->belongsToMany(User::class)
+            ->using(GameGood::class)
+            ->withTimestamps();
+    }
 }

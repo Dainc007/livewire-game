@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
 enum GoodType: string
@@ -25,9 +27,14 @@ enum GoodType: string
     case FOOD = 'food';
     case HAPPINESS = 'happiness';
 
+    public static function getAllCases(): array
+    {
+        return self::cases();
+    }
+
     public function description(): string
     {
-        return match($this) {
+        return match ($this) {
             self::GOLD => 'Currency used for various transactions',
             self::CULTURE => 'Cultural influence and development',
             self::SCIENCE => 'Scientific knowledge and research',
@@ -49,7 +56,7 @@ enum GoodType: string
 
     public function icon(): string
     {
-        return match($this) {
+        return match ($this) {
             self::GOLD => '💰',
             self::CULTURE => '🎭',
             self::SCIENCE => '🔬',
@@ -67,10 +74,5 @@ enum GoodType: string
             self::FOOD => '🍖',
             self::HAPPINESS => '😊',
         };
-    }
-
-    public static function getAllCases(): array
-    {
-        return self::cases();
     }
 }

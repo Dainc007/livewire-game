@@ -1,17 +1,24 @@
-<div class="bg-gray-800 text-white p-4">
-    <div class="container mx-auto">
-        <div class="flex items-center justify-between">
+<div class="bg-gray-800 text-white">
+    <div class="container mx-auto px-2 sm:px-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between py-2">
             <!-- Time Information -->
-            <div class="flex items-center space-x-6">
-               <livewire-date-counter :game="$game"/>
+            <div class="flex items-center space-x-2 sm:space-x-4 mb-2 sm:mb-0">
+                <livewire-date-counter :game="$game"/>
                 <livewire-timer :game="$game"/>
             </div>
 
             <!-- Resources -->
-            <div class="flex items-center space-x-6">
-                @foreach($goods as $good)
-                    <livewire:top-navigation-item :good="$good" :key="$good->id" />
-                @endforeach
+            <div class="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                <div wire:poll="updateGoods"  class="flex items-center space-x-2 sm:space-x-4">
+                    @foreach($game->goods->take(ceil($game->goods->count() / 2)) as $good)
+                        <livewire:top-navigation-item :good="$good" :key="$good->id" />
+                    @endforeach
+                </div>
+                <div wire:poll="updateGoods"  class="flex items-center space-x-2 sm:space-x-4">
+                    @foreach($game->goods->skip(ceil($game->goods->count() / 2)) as $good)
+                        <livewire:top-navigation-item :good="$good" :key="$good->id" />
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
