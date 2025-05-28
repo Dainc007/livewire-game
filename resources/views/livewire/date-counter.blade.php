@@ -14,22 +14,22 @@
 
     <!-- Season -->
     <div class="flex items-center space-x-2">
-                    <span class="text-xl">
-                        @switch($season)
-                            @case('spring')
-                                🌱
-                                @break
-                            @case('summer')
-                                ☀️
-                                @break
-                            @case('autumn')
-                                🍂
-                                @break
-                            @case('winter')
-                                ❄️
-                                @break
-                        @endswitch
-                    </span>
+{{--                    <span class="text-xl">--}}
+{{--                        @switch($season)--}}
+{{--                            @case('spring')--}}
+{{--                                🌱--}}
+{{--                                @break--}}
+{{--                            @case('summer')--}}
+{{--                                ☀️--}}
+{{--                                @break--}}
+{{--                            @case('autumn')--}}
+{{--                                🍂--}}
+{{--                                @break--}}
+{{--                            @case('winter')--}}
+{{--                                ❄️--}}
+{{--                                @break--}}
+{{--                        @endswitch--}}
+{{--                    </span>--}}
         <span class="text-xl">{{ ucfirst($season) }}</span>
     </div>
 </div>

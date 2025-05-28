@@ -27,15 +27,16 @@ class DateCounter extends Component
 
         switch ($this->dayCount)
             {
-            case $this->dayCount > 90:
+            case $this->dayCount < 90:
                 $this->season = 'winter';
                 break;
-            case $this->dayCount > 180:
+            case $this->dayCount < 180:
                 $this->season = 'spring';
                 break;
-            case $this->dayCount > 270:
+            case $this->dayCount < 270:
                 $this->season = 'summer';
-                case $this->dayCount > 360:
+                break;
+            case $this->dayCount < 360:
                     $this->dayCount = 1;
     }
 }
