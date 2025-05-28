@@ -1,5 +1,13 @@
 <div>
-    <div class="hexagon-map" id="map">
+    <div class="controls mb-4">
+        <div class="flex items-center space-x-4">
+            <label for="containerHeight">Container Height:</label>
+            <input type="range" id="containerHeight" min="300" max="800" value="600" class="border p-1" oninput="adjustContainerHeight(this.value)">
+            <span id="heightValue">600px</span>
+        </div>
+    </div>
+
+    <div class="hexagon-map" id="map" style="height: 600px;">
         @foreach($map as $colIndex => $column)
             <div class="column">
                 @foreach($column as $rowIndex => $hexagon)
@@ -48,6 +56,10 @@
         align-items: flex-start;
         padding-top: 50px;
         padding-bottom: 50px;
+        width: 100%;
+        overflow: auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
 
     .hexagon-map .column {
@@ -166,6 +178,13 @@
 </style>
 
 <script>
+    // Function to adjust container height
+    function adjustContainerHeight(height) {
+        const container = document.getElementById("map");
+        container.style.height = height + "px";
+        document.getElementById("heightValue").textContent = height + "px";
+    }
+
     (() => {
         const container = document.getElementById("map");
         const hexagons = Array.from(container.querySelectorAll(".anima"));
@@ -198,7 +217,14 @@
         const ripple = (target, isClick = true) => {
             if (container.classList.contains("show-ripple")) return;
 
-            const targetRect = target ? target.getBoundingClientRect() : { x: 0, y: 0 };
+            // Get target rect and adjust for scroll if needed
+            let targetRect;
+            if (target) {
+                const rect = target.getBoundingClientRect();
+                targetRect = { x: rect.x, y: rect.y };
+            } else {
+                targetRect = { x: 0, y: 0 };
+            }
 
             // Add class to clicked element if it exists and this is a click
             if (isClick && target) {
@@ -227,8 +253,12 @@
             const centerX = containerRect.x + (containerRect.width / 2) + offsetX;
             const centerY = containerRect.y + (containerRect.height / 2) - offsetY;
 
+            // Account for scroll position
+            const scrollX = container.scrollLeft;
+            const scrollY = container.scrollTop;
+
             // Call ripple with center coordinates, passing false for isClick
-            ripple({ getBoundingClientRect: () => ({ x: centerX, y: centerY }) }, false);
+            ripple({ getBoundingClientRect: () => ({ x: centerX + scrollX, y: centerY + scrollY }) }, false);
         };
 
         // Start animation when page loads

@@ -3,10 +3,43 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>{{ $title ?? 'Page Title' }}</title>
+        <title>{{ $title ?? 'Settlement Builder' }}</title>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
-    <body>
-        {{ $slot }}
+    <body class="bg-gray-100 min-h-screen">
+        <div class="flex flex-col h-screen">
+            <!-- Header -->
+            <header class="bg-gray-800 text-white p-4">
+                <livewire:game-navigation />
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 container mx-auto p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
+                    <!-- Game Board -->
+                    <div class="lg:col-span-3 bg-white rounded-lg shadow-lg p-4">
+                        <div class="aspect-square bg-gray-200 rounded-lg">
+                            <livewire:game-board />
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="lg:col-span-1 space-y-4">
+                        <!-- Building Controls -->
+                        <div class="bg-white rounded-lg shadow-lg p-4">
+                            <h2 class="text-xl font-bold mb-4">Buildings</h2>
+                            <div class="space-y-2">
+                                <button class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    Build House
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        @livewireScripts
     </body>
 </html>

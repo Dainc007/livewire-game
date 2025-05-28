@@ -1,6 +1,8 @@
 <?php
 
-use App\Livewire\GameManager;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', GameManager::class);
+//todo temporary
+Route::get('/', function () {
+    return view('components.layouts.app');
+});
