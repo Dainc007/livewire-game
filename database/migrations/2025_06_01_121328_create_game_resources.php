@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('game_user', function (Blueprint $table) {
+        Schema::create('game_resources', function (Blueprint $table) {
             $table->id();
             $table->foreignId('game_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-
-            $table->morphs('resourceable');
-
-            $table->json('goods')->nullable();
-            $table->json('buildings')->nullable();
-            $table->json('units')->nullable();
-
-            $table->unique(['game_id', 'user_id', 'resourceable_id', 'resourceable_type']);
+            $table->morphs('resourceable'); // This creates resourceable_id and resourceable_type
+            $table->integer('value')->default(0);
             $table->timestamps();
+
+            // Ensure a user can't have duplicate resources of the same type in a game
+            $table->unique(['game_id', 'user_id', 'resourceable_id', 'resourceable_type']);
         });
     }
 
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('game_user');
+        Schema::dropIfExists('game_resources');
     }
 };

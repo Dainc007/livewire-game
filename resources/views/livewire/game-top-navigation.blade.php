@@ -1,4 +1,6 @@
-<div class="bg-gray-800 text-white">
+<x-filament-widgets::widget>
+    <x-filament::section>
+    <div class="bg-gray-800 text-white">
     <div class="container mx-auto px-2 sm:px-4">
         <div class="flex flex-col sm:flex-row items-center justify-between py-2">
             <!-- Time Information -->
@@ -10,16 +12,13 @@
             <!-- Resources -->
             <div class="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                 <div wire:poll="updateGoods"  class="flex items-center space-x-2 sm:space-x-4">
-                    @foreach($game->goods->take(ceil($game->goods->count() / 2)) as $good)
-                        <livewire:top-navigation-item :good="$good" :key="$good->id" />
-                    @endforeach
-                </div>
-                <div wire:poll="updateGoods"  class="flex items-center space-x-2 sm:space-x-4">
-                    @foreach($game->goods->skip(ceil($game->goods->count() / 2)) as $good)
-                        <livewire:top-navigation-item :good="$good" :key="$good->id" />
+                    @foreach($user['good'] as $item)
+                        <livewire:top-navigation-item :item="$item" :key="$item->id" />
                     @endforeach
                 </div>
             </div>
         </div>
     </div>
 </div>
+    </x-filament::section>
+</x-filament-widgets::widget>

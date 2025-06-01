@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\GoodResource\Pages;
-use App\Filament\Resources\GoodResource\RelationManagers;
 use App\Models\Good;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class GoodResource extends Resource
+final class GoodResource extends Resource
 {
     protected static ?string $model = Good::class;
 

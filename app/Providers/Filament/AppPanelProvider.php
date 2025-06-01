@@ -27,6 +27,7 @@ final class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
+            ->topNavigation()
             ->login()
             ->registration()
             ->passwordReset()

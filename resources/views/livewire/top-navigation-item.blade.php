@@ -1,6 +1,6 @@
 <div>
     <div class="flex items-center space-x-1">
-        <span>{{ $good->icon }}</span>
-        <span>{{ $good->value ?? rand(1,100) }}</span>
+        <span>{{ $item->icon }}</span>
+        <span>{{ $item->value ?? '0' }}</span>
     </div>
 </div>

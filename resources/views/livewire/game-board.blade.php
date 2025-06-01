@@ -1,16 +1,6 @@
-<div>
-    <div class="controls mb-4">
-        <div class="flex items-center space-x-4">
-            <label for="containerHeight">Container Height:</label>
-            <input type="range" id="containerHeight" min="100" max="1000" value="500" class="border p-1" oninput="adjustContainerHeight(this.value)">
-            <span id="heightValue">1000px</span>
-        </div>
-        <div class="flex items-center space-x-4">
-            <label for="containerWidth">Container Width:</label>
-            <input type="range" id="containerWidth" min="1" max="100" value="50" class="border p-1" oninput="adjustContainerWidth(this.value)">
-            <span id="widthValue">100%</span>
-        </div>
-    </div>
+<x-filament-widgets::widget>
+    <x-filament::section>
+{{--    <livewire-game-top-navigation :game="$game"/>--}}
     <h1 wire:show="showModal" class="text-2xl font-bold text-center mb-4">test {{ $selectedField }}</h1>
 
     <div class="hexagon-map" id="map" style="height:500px;">
@@ -32,7 +22,7 @@
         --hexagon-size: 86px;
         --duration: 0.45s;
         --gap: 12px;
-        
+
         width: var(--hexagon-size);
         height: 98px;
         position: relative;
@@ -184,4 +174,5 @@
     window.addEventListener("load", startAnimationFromCenter);
     hexagons.forEach(hexagon => hexagon.addEventListener("click", () => ripple(hexagon)));
 </script>
-</div>
+    </x-filament::section>
+</x-filament-widgets::widget>

@@ -22,12 +22,20 @@ final class GameResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('status')->default('lobbying')->hidden(),
+                Forms\Components\TextInput::make('status')
+                    ->default('lobbying')
+                    ->readOnly(),
                 Forms\Components\Select::make('visibility')->options([
                     'public' => 'Public',
                     'private' => 'Private',
-                ])->default('public'),
-                Forms\Components\Select::make('users')->multiple()->relationship('users', 'name'),
+                ])
+                    ->hiddenOn('view')
+                    ->default('public'),
+                Forms\Components\Select::make('users')
+                    ->hiddenOn('view')
+                    ->multiple()
+                    ->preload()
+                    ->relationship('users', 'name'),
             ]);
     }
 
@@ -35,6 +43,8 @@ final class GameResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('users.name'),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -50,7 +60,8 @@ final class GameResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+//                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -64,6 +75,7 @@ final class GameResource extends Resource
     {
         return [
             'index' => Pages\ManageGames::route('/'),
+            'view' => Pages\ViewGame::route('/{record}'),
         ];
     }
 }

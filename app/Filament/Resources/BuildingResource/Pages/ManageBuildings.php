@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\BuildingResource\Pages;
 
 use App\Filament\Resources\BuildingResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
-class ManageBuildings extends ManageRecords
+final class ManageBuildings extends ManageRecords
 {
     protected static string $resource = BuildingResource::class;
 

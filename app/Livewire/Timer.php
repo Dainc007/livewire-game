@@ -28,6 +28,7 @@ final class Timer extends Component
 
     public function updateGameStatus(string $status): void
     {
-        $this->game->update(['status' => $status]);
+        $this->game->status = $status;
+        $this->game->save();
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class Game extends Model
 {
@@ -15,10 +16,15 @@ final class Game extends Model
             ->withTimestamps();
     }
 
-    public function goods()
+    public function games()
     {
-        return $this->belongsToMany(Good::class)
-            ->using(GameGood::class)
+        return $this->belongsToMany(self::class)
+            ->using(GameUser::class)
             ->withTimestamps();
+    }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(GameResource::class);
     }
 }

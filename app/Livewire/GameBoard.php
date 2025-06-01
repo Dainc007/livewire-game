@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Livewire\Component;
+use App\Models\Game;
+use Filament\Widgets\Widget;
 
-final class GameBoard extends Component
+final class GameBoard extends Widget
 {
     public array $map = [];
-
     public int $selectedField;
 
+    public Game $game;
     public bool $showModal = false;
+
+    protected static string $view = 'livewire.game-board';
+
+    protected static ?string $title = 'Game Board';
+
+    protected static ?string $description = 'Game Board';
+
+    protected string|int|array $columnSpan = 'full';
 
     public function mount(): void
     {

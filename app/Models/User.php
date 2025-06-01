@@ -49,13 +49,6 @@ final class User extends Authenticatable implements FilamentUser
             ->withTimestamps();
     }
 
-    public function goods()
-    {
-        return $this->belongsToMany(Good::class)
-            ->using(GameGood::class)
-            ->withTimestamps();
-    }
-
     /**
      * Get the attributes that should be cast.
      *
