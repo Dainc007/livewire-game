@@ -18,13 +18,7 @@ return new class extends Migration
             $table->foreignId('game_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            $table->morphs('resourceable');
-
-            $table->json('goods')->nullable();
-            $table->json('buildings')->nullable();
-            $table->json('units')->nullable();
-
-            $table->unique(['game_id', 'user_id', 'resourceable_id', 'resourceable_type']);
+            $table->unique(['game_id', 'user_id']);
             $table->timestamps();
         });
     }

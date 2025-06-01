@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Models\Building;
 use App\Models\Game;
 use Filament\Widgets\Widget;
 

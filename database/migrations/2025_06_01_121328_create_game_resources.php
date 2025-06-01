@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('game_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->morphs('resourceable'); // This creates resourceable_id and resourceable_type
+            $table->morphs('resourceable');
             $table->integer('value')->default(0);
             $table->timestamps();
 
-            // Ensure a user can't have duplicate resources of the same type in a game
             $table->unique(['game_id', 'user_id', 'resourceable_id', 'resourceable_type']);
         });
     }

@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Models\Building;
 use App\Models\Game;
-use App\Models\Unit;
-use App\Models\User;
+
+use App\Models\Good;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Good;
 
 final class GameTopNavigation extends Widget
 {
     public Game $game;
 
-    public $user;
+    public $resources;
 
     protected static string $view = 'livewire.game-top-navigation';
 
@@ -25,7 +23,25 @@ final class GameTopNavigation extends Widget
     public function mount(Game $game): void
     {
         $this->game = $game;
-        $this->user = $this->game->resources()
+        $this->refreshResources();
+    }
+
+    public function updateGoods(): void
+    {
+        if ($this->game->status !== 'running') {
+          return;
+        }
+
+        $this->game->resources()
+            ->where('resourceable_type', Good::class)
+            ->where('user_id', Auth::id())
+            ->increment('value', 1);
+        $this->refreshResources();
+    }
+
+    public function refreshResources(): void
+    {
+        $this->resources = $this->game->resources()
             ->where('user_id', Auth::id())
             ->with('resourceable')
             ->get()
@@ -42,10 +58,5 @@ final class GameTopNavigation extends Widget
                     ];
                 });
             });
-    }
-
-    public function updateGoods(): void
-    {
-        //
     }
 }
