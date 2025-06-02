@@ -1,203 +1,267 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-    <div class="hexagon-map" id="map" style="height:500px;">
-        @foreach($map as $colIndex => $column)
-            <div class="column {{ $colIndex % 2 === 0 ? 'even' : 'odd' }}">
-                @foreach($column as $rowIndex => $hexagon)
-                    <div
-                        wire:click="triggerBuildModal({{ $hexagon['id'] }})"
-                        id="{{ $hexagon['id'] }}"
-                        class="{{ $hexagon['classes'] }}"
-                        style="--icon: '{{ $hexagon['icon'] }}'"
-                    ></div>
-                @endforeach
-            </div>
-        @endforeach
-    </div>
+        <div class="hexagon-map" id="map">
+            @foreach($map as $colIndex => $column)
+                <div class="column {{ $colIndex % 2 === 0 ? 'even' : 'odd' }}">
+                    @foreach($column as $rowIndex => $hexagon)
+                        <div
+                            wire:click="triggerBuildModal({{ $hexagon['id'] }})"
+                            id="{{ $hexagon['id'] }}"
+                            class="{{ $hexagon['classes'] }}"
+                            style="--icon: '{{ $hexagon['icon'] }}'; --delay: {{ ($colIndex * 16 + $rowIndex) * 20 }}ms"
+                        ></div>
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
 
 <style>
-    .hexagon {
-        --hexagon-size: 86px;
-        --duration: 0.45s;
-        --gap: 12px;
-
-        width: var(--hexagon-size);
-        height: 98px;
-        position: relative;
-        background: #FCB503;
-        transition: background 0.25s ease;
-        overflow: hidden;
-        clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
-        cursor: pointer;
-    }
-
-    .hexagon:after {
-        content: var(--icon);
-        display: grid;
-        place-items: center;
-        position: absolute;
-        font-size: 14px;
-        inset: 0;
-        transition: color 0.25s ease;
-    }
-
     .hexagon-map {
         display: flex;
         position: relative;
         align-items: flex-start;
-        padding: 50px 0;
+        padding: 2rem 1rem;
         width: 100%;
         overflow: auto;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        border-radius: 12px;
+        box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.3);
+        min-height: 500px;
     }
 
-    .hexagon-map .column {
+    .column {
         display: grid;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 63px;
-        margin-left: -40px;
+        gap: 4rem;
+        margin-left: -2.5rem;
+        animation: columnSlideIn 0.8s ease-out;
+        animation-delay: calc(var(--column-index, 0) * 50ms);
+        animation-fill-mode: both;
     }
 
-    .hexagon-map .column.odd {
-        margin-top: 80px;
+    .column.odd {
+        margin-top: 5rem;
     }
 
-    @media (hover) {
-        .hexagon:hover {
-            background: #252525;
-        }
-        .hexagon:hover:after {
-            color: #FCB503;
-        }
+    .hexagon {
+        --size: 86px;
+        width: var(--size);
+        height: calc(var(--size) * 1.15);
+        position: relative;
+        cursor: pointer;
+        clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: hexagonAppear 0.6s ease-out;
+        animation-delay: var(--delay);
+        animation-fill-mode: both;
+        transform-origin: center;
     }
 
-    .hexagon.clicked { z-index: -1; }
-    .hexagon.grey, .hexagon.bord {
-        background: #FAF7EE;
-        pointer-events: none;
-        z-index: -2;
-    }
-
-    .hexagon.bord:after {
+    .hexagon::before {
         content: '';
         position: absolute;
         inset: 2px;
-        background: #fff;
-        clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+        border-radius: inherit;
+        clip-path: inherit;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        z-index: 1;
+        transition: opacity 0.3s ease;
+        opacity: 0;
     }
 
-    .hexagon.hide { visibility: hidden; }
+    .hexagon::after {
+        content: var(--icon);
+        display: grid;
+        place-items: center;
+        position: absolute;
+        inset: 0;
+        font-size: 1.2rem;
+        z-index: 2;
+        transition: all 0.3s ease;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
 
-    /* Field Type Colors */
+    /* Field Type Styles with Gradients and Animations */
     .field-grass {
-        background: #22c55e !important; /* Green */
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
     }
 
     .field-water {
-        background: #3b82f6 !important; /* Blue */
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        animation: waterShimmer 3s ease-in-out infinite;
     }
 
     .field-mountain {
-        background: #f59e0b !important; /* Orange/Yellow */
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
     }
 
     .field-forest {
-        background: #16a34a !important; /* Dark Green */
+        background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        box-shadow: 0 4px 8px rgba(22, 163, 74, 0.3);
+        animation: forestSway 4s ease-in-out infinite;
     }
 
     .field-desert {
-        background: #eab308 !important; /* Sandy Yellow */
+        background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+        box-shadow: 0 4px 8px rgba(234, 179, 8, 0.3);
+        animation: desertHeat 5s ease-in-out infinite;
     }
 
     .field-swamp {
-        background: #65a30d !important; /* Olive Green */
+        background: linear-gradient(135deg, #65a30d 0%, #4d7c0f 100%);
+        box-shadow: 0 4px 8px rgba(101, 163, 13, 0.3);
+        animation: swampBubble 6s ease-in-out infinite;
     }
 
     .field-tundra {
-        background: #06b6d4 !important; /* Cyan/Light Blue */
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        box-shadow: 0 4px 8px rgba(6, 182, 212, 0.3);
+        animation: tundraFreeze 4s ease-in-out infinite;
     }
 
-    @keyframes ripple {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(max(0.8, calc(var(--ripple-factor) / 100))); opacity: 0.42; }
-        65% { opacity: 1; background: #FCB503; }
-        70% { transform: scale(1.5); background: #FCB503; }
-        100% { transform: scale(1); opacity: 1; }
+    /* Hover Effects */
+    .hexagon:hover {
+        transform: scale(1.1) translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        z-index: 10;
     }
 
-    .hexagon-map.show-ripple .anima {
-        pointer-events: none;
-        cursor: default;
-        background: #FCB503;
-        animation: ripple var(--duration) ease-in-out;
-        animation-duration: max(var(--duration), calc(var(--duration) * var(--ripple-factor) / 100));
-        animation-delay: calc(var(--ripple-factor) * 8ms);
+    .hexagon:hover::before {
+        opacity: 1;
     }
 
-    .hexagon-map.show-ripple .anima:after {
-        color: #fff;
+    .hexagon:hover::after {
+        transform: scale(1.2);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Click Animation */
+    .hexagon:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+
+    /* Keyframe Animations */
+    @keyframes columnSlideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes hexagonAppear {
+        from {
+            opacity: 0;
+            transform: scale(0) rotate(180deg);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    @keyframes waterShimmer {
+        0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+        50% { filter: brightness(1.2) hue-rotate(10deg); }
+    }
+
+    @keyframes forestSway {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(1deg); }
+        75% { transform: rotate(-1deg); }
+    }
+
+    @keyframes desertHeat {
+        0%, 100% { filter: brightness(1) saturate(1); }
+        50% { filter: brightness(1.1) saturate(1.2); }
+    }
+
+    @keyframes swampBubble {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    @keyframes tundraFreeze {
+        0%, 100% { filter: brightness(1) contrast(1); }
+        50% { filter: brightness(1.1) contrast(1.1); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hexagon {
+            --size: 60px;
+        }
+        
+        .column {
+            gap: 2.5rem;
+            margin-left: -1.5rem;
+        }
+        
+        .column.odd {
+            margin-top: 3rem;
+        }
+        
+        .hexagon-map {
+            padding: 1rem 0.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hexagon {
+            --size: 45px;
+        }
+        
+        .hexagon::after {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .hexagon,
+        .column {
+            animation: none;
+        }
+        
+        .field-water,
+        .field-forest,
+        .field-desert,
+        .field-swamp,
+        .field-tundra {
+            animation: none;
+        }
+        
+        .hexagon:hover {
+            transform: scale(1.05);
+        }
     }
 </style>
 
 <script>
-    const map = document.getElementById("map");
-    const hexagons = Array.from(map.querySelectorAll(".anima"));
-    const distances = new Array(hexagons.length);
-
-    function adjustContainerHeight(height) {
-        map.style.height = `${height}px`;
-        document.getElementById("heightValue").textContent = `${height}px`;
-    }
-
-    function adjustContainerWidth(width) {
-        map.style.width = `${width}%`;
-        document.getElementById("widthValue").textContent = `${width}%`;
-    }
-
-    function calculateDistances(targetRect) {
-        return Math.max(...hexagons.map((element, index) => {
-            const rect = element.getBoundingClientRect();
-            return distances[index] = Math.hypot(rect.x - targetRect.x, rect.y - targetRect.y);
-        }));
-    }
-
-    function applyRippleEffect(maxDistance) {
-        requestAnimationFrame(() => {
-            hexagons.forEach((element, index) => {
-                element.style.setProperty("--ripple-factor", ((distances[index] / maxDistance) * 100).toFixed(2));
+    // Enhanced map initialization with staggered animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const columns = document.querySelectorAll('.column');
+        
+        columns.forEach((column, index) => {
+            column.style.setProperty('--column-index', index);
+        });
+        
+        // Add smooth scroll to clicked hexagon
+        document.querySelectorAll('.hexagon').forEach(hexagon => {
+            hexagon.addEventListener('click', function() {
+                this.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
             });
         });
-    }
-
-    function ripple(target, isClick = true) {
-        if (map.classList.contains("show-ripple")) return;
-
-        const targetRect = target ? target.getBoundingClientRect() : { x: 0, y: 0 };
-        if (isClick && target) target.classList.add("clicked");
-
-        const maxDistance = calculateDistances(targetRect);
-        map.classList.add("show-ripple");
-        applyRippleEffect(maxDistance);
-
-        const maxElement = hexagons[distances.indexOf(maxDistance)];
-        maxElement.addEventListener("animationend", () => {
-            map.classList.remove("show-ripple");
-            hexagons.forEach(element => {
-                element.style.removeProperty("--ripple-factor");
-                if (isClick && target) element.classList.remove("clicked");
-            });
-        }, { once: true });
-    }
-
-    function startAnimationFromCenter() {
-        const rect = map.getBoundingClientRect();
-        const centerX = rect.x + (rect.width / 2) - 40;
-        const centerY = rect.y + (rect.height / 2) - 80;
-        ripple({ getBoundingClientRect: () => ({ x: centerX + map.scrollLeft, y: centerY + map.scrollTop }) }, false);
-    }
-
-    window.addEventListener("load", startAnimationFromCenter);
-    hexagons.forEach(hexagon => hexagon.addEventListener("click", () => ripple(hexagon)));
+    });
 </script>
     </x-filament::section>
 </x-filament-widgets::widget>
