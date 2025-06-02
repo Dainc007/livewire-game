@@ -47,5 +47,11 @@ final class GameBoard extends Widget
     {
         $this->showModal = true;
         $this->selectedField = $id;
+        $this->dispatch('open-modal', id: 'build-action', filedId: $id);
+    }
+
+    public function triggerBuildModal($fieldId)
+    {
+        $this->dispatch('open-build-modal', fieldId: $fieldId);
     }
 }

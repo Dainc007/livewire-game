@@ -8,7 +8,7 @@
             <div class="column {{ $colIndex % 2 === 0 ? 'even' : 'odd' }}">
                 @foreach($column as $rowIndex => $hexagon)
                     <div
-                        wire:click="selectField({{ $hexagon['id'] }})"
+                        wire:click="triggerBuildModal({{ $hexagon['id'] }})"
                         id="{{ $hexagon['id'] }}"
                         class="{{ $hexagon['classes'] }}"
                     ></div>
