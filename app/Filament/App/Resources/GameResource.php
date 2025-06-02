@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 final class GameResource extends Resource
 {
@@ -32,16 +33,23 @@ final class GameResource extends Resource
                     ->hiddenOn('view')
                     ->default('public'),
                 Forms\Components\Select::make('users')
+                    ->default(fn () => [auth()->id()])
+                    ->required()
                     ->hiddenOn('view')
                     ->multiple()
                     ->preload()
-                    ->relationship('users', 'name'),
+            ->relationship('users', 'name'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->poll('3s')
+            ->modifyQueryUsing(function () {
+                $games = Auth::user()->games;
+                return $games && $games->isNotEmpty() ? $games->toQuery() : null;
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('users.name'),
@@ -68,7 +76,13 @@ final class GameResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading('No Games Yet')
+            ->emptyStateDescription(__('Create one and join the fun!'))
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
+            ])
+            ;
     }
 
     public static function getPages(): array

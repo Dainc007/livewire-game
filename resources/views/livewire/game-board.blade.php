@@ -117,7 +117,7 @@
     }
 
     .field-tundra {
-        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        background: linear-gradient(135deg, #b5d7e3 0%, #0891b2 100%);
         box-shadow: 0 4px 8px rgba(6, 182, 212, 0.3);
     }
 

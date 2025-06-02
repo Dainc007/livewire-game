@@ -8,10 +8,13 @@ use App\Filament\App\Resources\GameResource;
 use App\Livewire\GameBoard;
 use App\Livewire\GameTopNavigation;
 use App\Models\Building;
+use App\Models\Field;
 use Filament\Actions;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +23,7 @@ use Livewire\Attributes\On;
 final class ViewGame extends ViewRecord
 {
     protected static string $resource = GameResource::class;
+    public int $selectedField = 0;
 
     public function getFooterWidgets(): array
     {
@@ -36,11 +40,29 @@ final class ViewGame extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-//            Actions\EditAction::make(),
             Actions\Action::make('build')
+                ->extraAttributes(['style' => 'display: none;'])
                 ->slideOver()
-                ->modalHeading('What should we build?')
-                ->modalDescription('We are ready for your order!')
+                ->modalHeading(function () {
+                    $field = Field::findOrFail($this->selectedField);
+                    return strtoupper( $field->field_type);
+                })
+                ->modalDescription(function ($record) {
+                    $resources = $record
+                        ->resources()
+                        ->where('field_id', $this->selectedField)
+                        ->with('resourceable')
+                        ->get();
+
+                    if ($resources->isEmpty()) {
+                        return '';
+                    }
+
+                    return $resources
+                        ->map(function ($resource) {
+                            return $resource->resourceable->icon . ' ' . $resource->resourceable->name;
+                        })->join(PHP_EOL);
+                })
                 ->modalSubmitActionLabel('Let\'s build!')
                 ->modalIcon('heroicon-o-home')
                 ->modalWidth(MaxWidth::Medium)
@@ -82,19 +104,27 @@ final class ViewGame extends ViewRecord
 //                        ->disableOptionWhen(fn (string $value): bool => $value === 'published')
                         ->required(),
                 ])
-                ->action(function (array $data, $record): void {
+                ->action(function (array $data, $record, $livewire) {
                     $record->resources()->where('user_id', Auth::id())
                         ->where('resourceable_type', Building::class)
                         ->where('resourceable_id', $data['buildings'])
-                        ->update(['value' => 1]);
+                        ->update([
+                            'value' => 1,
+                            'field_id' => $livewire->selectedField
+                        ]);
+                    
+                    return Notification::make()
+                        ->title(__('brawo!'))
+                        ->body('budynek zbudowany')
+                        ->success()->send();
                 })
         ];
     }
 
     #[On('open-build-modal')]
-    public function openBuildModal($fieldId)
+    public function openBuildModal($fieldId): void
     {
-        $this->fieldId = $fieldId;
+        $this->selectedField = $fieldId;
         $this->mountAction('build');
     }
 }

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('game_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('field_id')->nullable()->constrained()->cascadeOnDelete();
+
             $table->morphs('resourceable');
             $table->integer('value')->default(0);
             $table->timestamps();
