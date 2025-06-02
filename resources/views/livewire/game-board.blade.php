@@ -8,7 +8,7 @@
                             wire:click="triggerBuildModal({{ $hexagon['id'] }})"
                             id="{{ $hexagon['id'] }}"
                             class="{{ $hexagon['classes'] }}"
-                            style="--icon: '{{ $hexagon['icon'] }}'; --delay: {{ ($colIndex * 16 + $rowIndex) * 20 }}ms"
+                            style="--icon: '{{ $hexagon['icon'] }}'; --delay: {{ ($colIndex * 16 + $rowIndex) * 10 }}ms"
                         ></div>
                     @endforeach
                 </div>
@@ -20,7 +20,7 @@
         display: flex;
         position: relative;
         align-items: flex-start;
-        padding: 2rem 1rem;
+        padding: 2rem;
         width: 100%;
         overflow: auto;
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
@@ -33,8 +33,8 @@
         display: grid;
         gap: 4rem;
         margin-left: -2.5rem;
-        animation: columnSlideIn 0.8s ease-out;
-        animation-delay: calc(var(--column-index, 0) * 50ms);
+        animation: columnSlideIn 0.4s ease-out;
+        animation-delay: calc(var(--column-index, 0) * 25ms);
         animation-fill-mode: both;
     }
 
@@ -50,10 +50,13 @@
         cursor: pointer;
         clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: hexagonAppear 0.6s ease-out;
+        animation: hexagonAppear 0.4s ease-out;
         animation-delay: var(--delay);
         animation-fill-mode: both;
         transform-origin: center;
+        opacity: 0;
+        pointer-events: auto;
+        z-index: 1;
     }
 
     .hexagon::before {
@@ -66,6 +69,7 @@
         z-index: 1;
         transition: opacity 0.3s ease;
         opacity: 0;
+        pointer-events: none;
     }
 
     .hexagon::after {
@@ -78,6 +82,7 @@
         z-index: 2;
         transition: all 0.3s ease;
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        pointer-events: none;
     }
 
     /* Field Type Styles with Gradients and Animations */
@@ -89,7 +94,6 @@
     .field-water {
         background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
         box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
-        animation: waterShimmer 3s ease-in-out infinite;
     }
 
     .field-mountain {
@@ -100,32 +104,59 @@
     .field-forest {
         background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
         box-shadow: 0 4px 8px rgba(22, 163, 74, 0.3);
-        animation: forestSway 4s ease-in-out infinite;
     }
 
     .field-desert {
         background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
         box-shadow: 0 4px 8px rgba(234, 179, 8, 0.3);
-        animation: desertHeat 5s ease-in-out infinite;
     }
 
     .field-swamp {
         background: linear-gradient(135deg, #65a30d 0%, #4d7c0f 100%);
         box-shadow: 0 4px 8px rgba(101, 163, 13, 0.3);
-        animation: swampBubble 6s ease-in-out infinite;
     }
 
     .field-tundra {
         background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
         box-shadow: 0 4px 8px rgba(6, 182, 212, 0.3);
+    }
+
+    /* Ambient Animations - Applied after entrance */
+    .field-grass.loaded {
+        animation: grassSway 4s ease-in-out infinite;
+    }
+
+    .field-water.loaded {
+        animation: waterShimmer 3s ease-in-out infinite;
+    }
+
+    .field-mountain.loaded {
+        animation: mountainGlow 5s ease-in-out infinite;
+    }
+
+    .field-forest.loaded {
+        animation: forestSway 4s ease-in-out infinite;
+    }
+
+    .field-desert.loaded {
+        animation: desertHeat 5s ease-in-out infinite;
+    }
+
+    .field-swamp.loaded {
+        animation: swampBubble 6s ease-in-out infinite;
+    }
+
+    .field-tundra.loaded {
         animation: tundraFreeze 4s ease-in-out infinite;
     }
 
-    /* Hover Effects */
+    /* Enhanced Hover Effects - Works for ALL field types */
     .hexagon:hover {
-        transform: scale(1.1) translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        transform: scale(1.15) translateY(-10px) rotate(2deg);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
         z-index: 10;
+        filter: brightness(1.2) saturate(1.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .hexagon:hover::before {
@@ -133,13 +164,14 @@
     }
 
     .hexagon:hover::after {
-        transform: scale(1.2);
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        transform: scale(1.3);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
     }
 
     /* Click Animation */
     .hexagon:active {
-        transform: scale(0.95);
+        transform: scale(0.9) rotate(-1deg);
         transition: transform 0.1s ease;
     }
 
@@ -156,40 +188,77 @@
     }
 
     @keyframes hexagonAppear {
-        from {
+        0% {
             opacity: 0;
             transform: scale(0) rotate(180deg);
         }
-        to {
+        60% {
+            opacity: 1;
+            transform: scale(1.1) rotate(-10deg);
+        }
+        100% {
             opacity: 1;
             transform: scale(1) rotate(0deg);
         }
     }
 
+    @keyframes grassSway {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(0.5deg); }
+        75% { transform: rotate(-0.5deg); }
+    }
+
     @keyframes waterShimmer {
-        0%, 100% { filter: brightness(1) hue-rotate(0deg); }
-        50% { filter: brightness(1.2) hue-rotate(10deg); }
+        0%, 100% {
+            filter: brightness(1) hue-rotate(0deg);
+        }
+        50% {
+            filter: brightness(1.1) hue-rotate(5deg);
+        }
+    }
+
+    @keyframes mountainGlow {
+        0%, 100% {
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        50% {
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.5), 0 0 20px rgba(245, 158, 11, 0.2);
+        }
     }
 
     @keyframes forestSway {
         0%, 100% { transform: rotate(0deg); }
-        25% { transform: rotate(1deg); }
-        75% { transform: rotate(-1deg); }
+        25% { transform: rotate(0.8deg); }
+        75% { transform: rotate(-0.8deg); }
     }
 
     @keyframes desertHeat {
-        0%, 100% { filter: brightness(1) saturate(1); }
-        50% { filter: brightness(1.1) saturate(1.2); }
+        0%, 100% {
+            filter: brightness(1) saturate(1);
+        }
+        50% {
+            filter: brightness(1.15) saturate(1.2);
+        }
     }
 
     @keyframes swampBubble {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.02); }
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.02);
+        }
     }
 
     @keyframes tundraFreeze {
-        0%, 100% { filter: brightness(1) contrast(1); }
-        50% { filter: brightness(1.1) contrast(1.1); }
+        0%, 100% {
+            filter: brightness(1) contrast(1);
+            box-shadow: 0 4px 8px rgba(6, 182, 212, 0.3);
+        }
+        50% {
+            filter: brightness(1.1) contrast(1.1);
+            box-shadow: 0 4px 8px rgba(6, 182, 212, 0.5), 0 0 15px rgba(6, 182, 212, 0.2);
+        }
     }
 
     /* Responsive Design */
@@ -197,16 +266,16 @@
         .hexagon {
             --size: 60px;
         }
-        
+
         .column {
             gap: 2.5rem;
             margin-left: -1.5rem;
         }
-        
+
         .column.odd {
             margin-top: 3rem;
         }
-        
+
         .hexagon-map {
             padding: 1rem 0.5rem;
         }
@@ -216,7 +285,7 @@
         .hexagon {
             --size: 45px;
         }
-        
+
         .hexagon::after {
             font-size: 0.9rem;
         }
@@ -228,7 +297,7 @@
         .column {
             animation: none;
         }
-        
+
         .field-water,
         .field-forest,
         .field-desert,
@@ -236,32 +305,11 @@
         .field-tundra {
             animation: none;
         }
-        
+
         .hexagon:hover {
             transform: scale(1.05);
         }
     }
 </style>
-
-<script>
-    // Enhanced map initialization with staggered animations
-    document.addEventListener('DOMContentLoaded', function() {
-        const columns = document.querySelectorAll('.column');
-        
-        columns.forEach((column, index) => {
-            column.style.setProperty('--column-index', index);
-        });
-        
-        // Add smooth scroll to clicked hexagon
-        document.querySelectorAll('.hexagon').forEach(hexagon => {
-            hexagon.addEventListener('click', function() {
-                this.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-            });
-        });
-    });
-</script>
     </x-filament::section>
 </x-filament-widgets::widget>
