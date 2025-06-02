@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Models\Building;
+use App\Enums\FieldType;
 use App\Models\Game;
 use Filament\Widgets\Widget;
 
@@ -34,10 +34,13 @@ final class GameBoard extends Widget
         $id = 1;
         $this->map = collect(range(0, 29))->map(function ($col) use (&$id) {
             return collect(range(0, 15))->map(function ($row) use (&$id): array {
+                $fieldType = FieldType::cases()[array_rand(FieldType::cases())];
+
                 return [
                     'id' => $id++,
-                    'classes' => 'hexagon anima success',
-                    'icon' => '',
+                    'type' => $fieldType->value,
+                    'classes' => $fieldType->cssClasses(),
+                    'icon' => $fieldType->icon(),
                 ];
             })->all();
         })->all();
@@ -50,7 +53,7 @@ final class GameBoard extends Widget
         $this->dispatch('open-modal', id: 'build-action', filedId: $id);
     }
 
-    public function triggerBuildModal($fieldId)
+    public function triggerBuildModal($fieldId): void
     {
         $this->dispatch('open-build-modal', fieldId: $fieldId);
     }

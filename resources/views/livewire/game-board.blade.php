@@ -1,6 +1,5 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-{{--    <livewire-game-top-navigation :game="$game"/>--}}
     <h1 wire:show="showModal" class="text-2xl font-bold text-center mb-4">test {{ $selectedField }}</h1>
 
     <div class="hexagon-map" id="map" style="height:500px;">
@@ -11,6 +10,7 @@
                         wire:click="triggerBuildModal({{ $hexagon['id'] }})"
                         id="{{ $hexagon['id'] }}"
                         class="{{ $hexagon['classes'] }}"
+                        style="--icon: '{{ $hexagon['icon'] }}'"
                     ></div>
                 @endforeach
             </div>
@@ -50,8 +50,6 @@
         padding: 50px 0;
         width: 100%;
         overflow: auto;
-        border: 1px solid #ccc;
-        border-radius: 5px;
     }
 
     .hexagon-map .column {
@@ -91,6 +89,35 @@
     }
 
     .hexagon.hide { visibility: hidden; }
+
+    /* Field Type Colors */
+    .field-grass {
+        background: #22c55e !important; /* Green */
+    }
+
+    .field-water {
+        background: #3b82f6 !important; /* Blue */
+    }
+
+    .field-mountain {
+        background: #f59e0b !important; /* Orange/Yellow */
+    }
+
+    .field-forest {
+        background: #16a34a !important; /* Dark Green */
+    }
+
+    .field-desert {
+        background: #eab308 !important; /* Sandy Yellow */
+    }
+
+    .field-swamp {
+        background: #65a30d !important; /* Olive Green */
+    }
+
+    .field-tundra {
+        background: #06b6d4 !important; /* Cyan/Light Blue */
+    }
 
     @keyframes ripple {
         0% { transform: scale(1); opacity: 1; }
