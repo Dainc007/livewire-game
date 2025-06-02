@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Enums\FieldType;
 use App\Models\Game;
+use App\Services\MapGenerationService;
 use Filament\Widgets\Widget;
 
 final class GameBoard extends Widget
 {
     public array $map = [];
-    public int $selectedField;
 
     public Game $game;
-    public bool $showModal = false;
 
     protected static string $view = 'livewire.game-board';
 
@@ -26,31 +24,12 @@ final class GameBoard extends Widget
 
     public function mount(): void
     {
-        $this->generateMap();
+        $this->loadMap();
     }
 
-    public function generateMap(): void
+    public function loadMap(): void
     {
-        $id = 1;
-        $this->map = collect(range(0, 29))->map(function ($col) use (&$id) {
-            return collect(range(0, 15))->map(function ($row) use (&$id): array {
-                $fieldType = FieldType::cases()[array_rand(FieldType::cases())];
-
-                return [
-                    'id' => $id++,
-                    'type' => $fieldType->value,
-                    'classes' => $fieldType->cssClasses(),
-                    'icon' => $fieldType->icon(),
-                ];
-            })->all();
-        })->all();
-    }
-
-    public function selectField(int $id): void
-    {
-        $this->showModal = true;
-        $this->selectedField = $id;
-        $this->dispatch('open-modal', id: 'build-action', filedId: $id);
+        $this->map = (new MapGenerationService())->generateMapForGame($this->game);
     }
 
     public function triggerBuildModal($fieldId): void

@@ -27,4 +27,9 @@ final class Game extends Model
     {
         return $this->hasMany(GameResource::class);
     }
+
+    public function fields(): HasMany
+    {
+        return $this->hasMany(Field::class);
+    }
 }

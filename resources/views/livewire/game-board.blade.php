@@ -1,7 +1,5 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-    <h1 wire:show="showModal" class="text-2xl font-bold text-center mb-4">test {{ $selectedField }}</h1>
-
     <div class="hexagon-map" id="map" style="height:500px;">
         @foreach($map as $colIndex => $column)
             <div class="column {{ $colIndex % 2 === 0 ? 'even' : 'odd' }}">
