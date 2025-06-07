@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class GameResource extends Model
+final class GameResource extends Model
 {
 
     public function game(): \Illuminate\Database\Eloquent\Relations\BelongsTo

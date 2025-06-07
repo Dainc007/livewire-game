@@ -10,6 +10,12 @@ use App\Models\Game;
 
 final class MapGenerationService
 {
+
+    public function handle(): void
+    {
+        //todo
+    }
+
     public function generateMapForGame(Game $game): array
     {
         // Check if fields already exist for this game
@@ -38,7 +44,7 @@ final class MapGenerationService
         for ($x = 0; $x < 30; $x++) {
             $map[$x] = [];
             for ($y = 0; $y < 16; $y++) {
-                $fieldType = FieldType::cases()[array_rand(FieldType::cases())];
+                $fieldType = collect(FieldType::cases())->random();
 
                 $field = new Field();
                 $field->game_id = $game->id;

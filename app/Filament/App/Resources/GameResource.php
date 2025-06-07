@@ -33,7 +33,7 @@ final class GameResource extends Resource
                     ->hiddenOn('view')
                     ->default('public'),
                 Forms\Components\Select::make('users')
-                    ->default(fn () => [auth()->id()])
+                    ->default(fn (): array => [auth()->id()])
                     ->required()
                     ->hiddenOn('view')
                     ->multiple()

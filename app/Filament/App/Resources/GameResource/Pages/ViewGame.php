@@ -59,7 +59,7 @@ final class ViewGame extends ViewRecord
                     }
 
                     return $resources
-                        ->map(function ($resource) {
+                        ->map(function ($resource): string {
                             return $resource->resourceable->icon . ' ' . $resource->resourceable->name;
                         })->join(PHP_EOL);
                 })
@@ -104,7 +104,7 @@ final class ViewGame extends ViewRecord
 //                        ->disableOptionWhen(fn (string $value): bool => $value === 'published')
                         ->required(),
                 ])
-                ->action(function (array $data, $record, $livewire) {
+                ->action(function (array $data, $record, $livewire): \Filament\Notifications\Notification {
                     $record->resources()->where('user_id', Auth::id())
                         ->where('resourceable_type', Building::class)
                         ->where('resourceable_id', $data['buildings'])
@@ -122,7 +122,7 @@ final class ViewGame extends ViewRecord
     }
 
     #[On('open-build-modal')]
-    public function openBuildModal($fieldId): void
+    public function openBuildModal(int $fieldId): void
     {
         $this->selectedField = $fieldId;
         $this->mountAction('build');
