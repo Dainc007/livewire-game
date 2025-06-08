@@ -6,6 +6,8 @@ namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\GameResource\Pages;
 use App\Models\Game;
+use App\Filament\Traits\HasTranslatedLabels;
+use App\Filament\Traits\HasActiveIcon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 
 final class GameResource extends Resource
 {
+    use HasTranslatedLabels,
+        HasActiveIcon;
     protected static ?string $model = Game::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -77,8 +81,8 @@ final class GameResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->emptyStateHeading('No Games Yet')
-            ->emptyStateDescription(__('Create one and join the fun!'))
+            ->emptyStateHeading(__('GameResourceTableEmptyStateHeading'))
+            ->emptyStateDescription(__('GameResourceTableEmptyStateDescription'))
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
             ])

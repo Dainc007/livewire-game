@@ -23,24 +23,10 @@ final class ManageGames extends ManageRecords
                 ->after(function (Game $record): void {
                     $record->load('users');
                     $record->users()->each(function ($user) use ($record): void {
-                        Good::all()->map(fn($good) => $record->resources()->create([
-                            'user_id' => $user->id,
-                            'resourceable_id' => $good->id,
-                            'resourceable_type' => Good::class,
-                            'value' => 0,
-                        ]));
-                        Unit::all()->map(fn($unit) => $record->resources()->create([
-                            'user_id' => $user->id,
-                            'resourceable_id' => $unit->id,
-                            'resourceable_type' => Unit::class,
-                            'value' => 0,
-                        ]));
-                        Building::all()->map(fn($building) => $record->resources()->create([
-                            'user_id' => $user->id,
-                            'resourceable_id' => $building->id,
-                            'resourceable_type' => Building::class,
-                            'value' => 0,
-                        ]));
+                        $resourceService = new ResourceService($record, $user);
+                        $resourceService->createManyGoods()
+                            ->createManyUnits()
+                            ->createManyBuildings();
                     });
                 }),
         ];

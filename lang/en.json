@@ -1,0 +1,10 @@
+{
+    "GameResourceTableEmptyStateHeading": "No Games Yet",
+    "GameResourceTableEmptyStateDescription": "Create one and join the fun!",
+    "Visibility" : "Visibility",
+    "Status" : "Status",
+    "Users" : "Users",
+    "FilamentResourceNavigationLabelGame": "Game",
+    "FilamentResourceModelLabelGame": "Game",
+    "FilamentResourcePluralModelLabelGame": "Games"
+}

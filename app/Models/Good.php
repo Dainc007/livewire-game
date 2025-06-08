@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Scope;
 
 final class Good extends Model
 {
@@ -27,4 +29,16 @@ final class Good extends Model
     {
         return $this->morphMany(GameResource::class, 'resourceable');
     }
+
+        /**
+
+     * Scope a query to only include active users.
+
+     */
+
+     #[Scope]
+     protected function isActive(Builder $query): void
+     {
+        $query->where('is_active', 1); 
+     }
 }

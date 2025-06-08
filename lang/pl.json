@@ -1,0 +1,10 @@
+{
+    "GameResourceTableEmptyStateHeading": "Brak istniejących gier",
+    "GameResourceTableEmptyStateDescription": "Stwórz grę i dołącz do zabawy!",
+    "Visibility" : "Widoczność",
+    "Status" : "Status",
+    "Users" : "Użytkownicy",
+    "FilamentResourceNavigationLabelGame": "Gra",
+    "FilamentResourceModelLabelGame": "Gra",
+    "FilamentResourcePluralModelLabelGame": "Gry"
+}
