@@ -10,15 +10,23 @@
                     </div>
 
                     <!-- Resources -->
-                    <div wire:poll="updateGoods" class="flex flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4">
-                        @foreach($resources as $key => $items)
-                            @foreach($items as $item)
-                                <div class="flex items-center space-x-1">
-                                    <span class="text-sm">{{ $item->icon }}</span>
-                                    <span class="text-xs sm:text-sm font-medium">{{ $item->value ?? '0' }}</span>
-                                </div>
+                    <div wire:poll.3s="updateGoods" class="flex flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4">
+                        @if($resources && $resources->isNotEmpty())
+                            @foreach($resources as $key => $items)
+                                @if($items && $items->isNotEmpty())
+                                    @foreach($items as $item)
+                                        @if($item && isset($item->icon) && isset($item->value))
+                                            <div class="flex items-center space-x-1">
+                                                <span class="text-sm">{{ $item->icon }}</span>
+                                                <span class="text-xs sm:text-sm font-medium">{{ $item->value }}</span>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
                             @endforeach
-                        @endforeach
+                        @else
+                            <div class="text-xs text-gray-400">No resources available</div>
+                        @endif
                     </div>
                 </div>
             </div>
