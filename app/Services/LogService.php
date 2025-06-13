@@ -13,7 +13,7 @@ final class LogService
     {
         if ($logMissingTranslationKeys) {
             Lang::handleMissingKeysUsing(function ($key, $replace, $locale, $fallback): void {
-                Log::error("Missing translation key: {$key} in locale: {$locale}");
+                Log::channel('translations')->info("Missing translation key: {$key} in locale: {$locale}");
             });
         }
     }
