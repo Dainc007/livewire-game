@@ -6,7 +6,6 @@ namespace App\Providers;
 
 use App\Services\LogService;
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
-use Devrabiul\LivewireDoctor\LivewireDoctor;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
@@ -44,8 +43,6 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureFilamentTranslations();
         $this->forceHttps();
         $this->configureFilamentPlugins();
-        LivewireDoctor::initCustomAsset();
-
     }
 
     /**
