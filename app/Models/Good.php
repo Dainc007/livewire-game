@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 
 final class Good extends Model
 {
