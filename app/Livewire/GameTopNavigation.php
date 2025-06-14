@@ -35,33 +35,40 @@ final class GameTopNavigation extends Widget
         }
 
         try {
-            // Update goods
-            $this->game->resources()
-                ->where('resourceable_type', Good::class)
-                ->where('user_id', Auth::id())
-                ->increment('value', 1);
-
-            // Update units
-            $this->game->resources()
-                ->where('resourceable_type', Unit::class)
-                ->where('user_id', Auth::id())
-                ->where('value', '>', 0)
-                ->increment('value', 1);
-
-            // Update buildings
-            $this->game->resources()
+            $buildingsIds = $this->game->resources()
                 ->where('resourceable_type', Building::class)
                 ->where('user_id', Auth::id())
                 ->where('value', '>', 0)
-                ->increment('value', 1);
+                ->pluck('resourceable_id');
+
+       
+            if($buildingsIds->count() > 0) {
+                $this->game->resources()
+                    ->where('resourceable_type', Good::class)
+                    ->where('user_id', Auth::id())
+                    ->whereIn('resourceable_id', $buildingsIds)
+                    ->increment('value', 1);
+            }
+
+
+
+            // Update units
+            // $this->game->resources()
+            //     ->where('resourceable_type', Unit::class)
+            //     ->where('user_id', Auth::id())
+            //     ->where('value', '>', 0)
+            //     ->increment('value', 1);
+
+            // // Update buildings
+            // $this->game->resources()
+            //     ->where('resourceable_type', Building::class)
+            //     ->where('user_id', Auth::id())
+            //     ->where('value', '>', 0)
+            //     ->increment('value', 1);
 
             $this->refreshResources();
         } catch (\Exception $e) {
-            Log::error('Error updating resources:', [
-                'error' => $e->getMessage(),
-                'game_id' => $this->game->id,
-                'user_id' => Auth::id()
-            ]);
+
         }
     }
 
@@ -72,19 +79,8 @@ final class GameTopNavigation extends Widget
                 ->where('user_id', Auth::id())
                 ->with('resourceable')
                 ->get();
-
-            // Debug the raw resources
-            Log::info('Raw resources:', [
-                'game_id' => $this->game->id,
-                'user_id' => Auth::id(),
-                'resources' => $resources->toArray()
-            ]);
-
             if ($resources->isEmpty()) {
-                Log::warning('No resources found for game:', [
-                    'game_id' => $this->game->id,
-                    'user_id' => Auth::id()
-                ]);
+
                 return;
             }
 
@@ -95,11 +91,7 @@ final class GameTopNavigation extends Widget
                 ->map(function ($resources) {
                     return $resources->map(function ($resource) {
                         if (!$resource->resourceable) {
-                            Log::warning('Resourceable not found:', [
-                                'resource_id' => $resource->id,
-                                'resourceable_type' => $resource->resourceable_type,
-                                'resourceable_id' => $resource->resourceable_id
-                            ]);
+  
                             return null;
                         }
 
@@ -112,18 +104,8 @@ final class GameTopNavigation extends Widget
                     })->filter();
                 });
 
-            // Debug the grouped resources
-            Log::info('Grouped resources:', [
-                'game_id' => $this->game->id,
-                'user_id' => Auth::id(),
-                'resources' => $this->resources->toArray()
-            ]);
         } catch (\Exception $e) {
-            Log::error('Error refreshing resources:', [
-                'error' => $e->getMessage(),
-                'game_id' => $this->game->id,
-                'user_id' => Auth::id()
-            ]);
+
         }
     }
 }

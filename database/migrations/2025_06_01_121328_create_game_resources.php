@@ -19,6 +19,10 @@ return new class extends Migration
 
             $table->morphs('resourceable');
             $table->integer('value')->default(0);
+
+            $table->timestamp('construction_started_at')->nullable();
+            $table->timestamp('construction_completed_at')->nullable();
+
             $table->timestamps();
 
             $table->unique(['game_id', 'user_id', 'resourceable_id', 'resourceable_type']);

@@ -26,6 +26,7 @@ final class GoodResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('description'),
                 Forms\Components\TextInput::make('icon'),
+                Forms\Components\Toggle::make('is_active')
             ]);
     }
 
@@ -39,6 +40,7 @@ final class GoodResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('icon')
                     ->searchable(),
+                Tables\Columns\ToggleColumn::make('is_active'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

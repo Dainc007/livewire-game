@@ -33,6 +33,7 @@ final class BuildingResource extends Resource
                     ->numeric()
                     ->default(0)
                     ->prefix('$'),
+                Forms\Components\Toggle::make('is_active')
             ]);
     }
 
@@ -51,6 +52,7 @@ final class BuildingResource extends Resource
                 Tables\Columns\TextColumn::make('cost')
                     ->money()
                     ->sortable(),
+                Tables\Columns\ToggleColumn::make('is_active'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
