@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Models\Building;
 use App\Models\Game;
 use App\Models\Good;
 use App\Models\Unit;
-use App\Models\Building;
+use Exception;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 final class GameTopNavigation extends Widget
 {
@@ -41,16 +41,13 @@ final class GameTopNavigation extends Widget
                 ->where('value', '>', 0)
                 ->pluck('resourceable_id');
 
-       
-            if($buildingsIds->count() > 0) {
+            if ($buildingsIds->count() > 0) {
                 $this->game->resources()
                     ->where('resourceable_type', Good::class)
                     ->where('user_id', Auth::id())
                     ->whereIn('resourceable_id', $buildingsIds)
                     ->increment('value', 1);
             }
-
-
 
             // Update units
             // $this->game->resources()
@@ -67,7 +64,7 @@ final class GameTopNavigation extends Widget
             //     ->increment('value', 1);
 
             $this->refreshResources();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
         }
     }
@@ -86,12 +83,12 @@ final class GameTopNavigation extends Widget
 
             $this->resources = $resources
                 ->groupBy(function ($resource) {
-                    return strtolower(class_basename($resource->resourceable_type));
+                    return mb_strtolower(class_basename($resource->resourceable_type));
                 })
                 ->map(function ($resources) {
                     return $resources->map(function ($resource) {
-                        if (!$resource->resourceable) {
-  
+                        if (! $resource->resourceable) {
+
                             return null;
                         }
 
@@ -104,7 +101,7 @@ final class GameTopNavigation extends Widget
                     })->filter();
                 });
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
         }
     }

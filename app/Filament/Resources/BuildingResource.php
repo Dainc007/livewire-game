@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BuildingResource\Pages;
+use App\Filament\Resources\BuildingResource\RelationManagers\CostsRelationManager;
 use App\Models\Building;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -33,7 +34,7 @@ final class BuildingResource extends Resource
                     ->numeric()
                     ->default(0)
                     ->prefix('$'),
-                Forms\Components\Toggle::make('is_active')
+                Forms\Components\Toggle::make('is_active'),
             ]);
     }
 
@@ -77,10 +78,19 @@ final class BuildingResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            CostsRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageBuildings::route('/'),
+            'index' => Pages\ListBuildings::route('/'),
+            'create' => Pages\CreateBuilding::route('/create'),
+            'edit' => Pages\EditBuilding::route('/{record}/edit'),
         ];
     }
 }

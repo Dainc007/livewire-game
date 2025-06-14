@@ -10,10 +10,9 @@ use App\Models\Game;
 
 final class MapGenerationService
 {
-
     public function handle(): void
     {
-        //todo
+        // todo
     }
 
     public function generateMapForGame(Game $game): array

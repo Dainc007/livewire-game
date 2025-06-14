@@ -57,4 +57,4 @@ enum FieldType: string
             self::TUNDRA => 'hexagon anima field-tundra',   // Light Blue/White
         };
     }
-} 
+}

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\GameResource\Pages;
-use App\Models\Game;
-use App\Filament\Traits\HasTranslatedLabels;
 use App\Filament\Traits\HasActiveIcon;
+use App\Filament\Traits\HasTranslatedLabels;
+use App\Models\Game;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Auth;
 
 final class GameResource extends Resource
 {
-    use HasTranslatedLabels,
-        HasActiveIcon;
+    use HasActiveIcon,
+        HasTranslatedLabels;
+
     protected static ?string $model = Game::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -42,7 +43,7 @@ final class GameResource extends Resource
                     ->hiddenOn('view')
                     ->multiple()
                     ->preload()
-            ->relationship('users', 'name'),
+                    ->relationship('users', 'name'),
             ]);
     }
 
@@ -52,6 +53,7 @@ final class GameResource extends Resource
             ->poll('3s')
             ->modifyQueryUsing(function () {
                 $games = Auth::user()->games;
+
                 return $games && $games->isNotEmpty() ? $games->toQuery() : null;
             })
             ->columns([
@@ -73,7 +75,7 @@ final class GameResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-//                Tables\Actions\EditAction::make(),
+                //                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -85,8 +87,7 @@ final class GameResource extends Resource
             ->emptyStateDescription(__('GameResourceTableEmptyStateDescription'))
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
-            ])
-            ;
+            ]);
     }
 
     public static function getPages(): array

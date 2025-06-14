@@ -6,9 +6,9 @@ namespace App\Filament\Resources\BuildingResource\Pages;
 
 use App\Filament\Resources\BuildingResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
+use Filament\Resources\Pages\ListRecords;
 
-final class ManageBuildings extends ManageRecords
+final class ListBuildings extends ListRecords
 {
     protected static string $resource = BuildingResource::class;
 

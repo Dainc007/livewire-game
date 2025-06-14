@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\BuildingType;
-use App\Models\Building;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,27 +19,9 @@ return new class extends Migration
             $table->string('type');
             $table->string('description')->nullable();
             $table->string('icon')->nullable();
-            $table->integer('cost')->default(0);
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
-
-        $buildings = [];
-        foreach (BuildingType::getAllCases() as $buildingType) {
-            $buildings[] = [
-                'name' => $buildingType->value,
-                'type' => $buildingType->value,
-                'description' => $buildingType->description(),
-                'icon' => $buildingType->icon(),
-                'cost' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-
-        if (! empty($buildings)) {
-            Building::insert($buildings);
-        }
     }
 
     /**

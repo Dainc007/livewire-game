@@ -47,10 +47,10 @@ arch('avoid inheritance')
         'App\Http\Requests',
         'App\Http\Resources',
         'App\Filament',
-        'App\Livewire'
+        'App\Livewire',
     ]);
 
-//arch('annotations')
+// arch('annotations')
 //    ->expect('App')
 //    ->toHavePropertiesDocumented()
 //    ->toHaveMethodsDocumented();
@@ -62,7 +62,6 @@ arch('avoid open for extension')
     ->ignoring([
         'App\Http\Controllers',
     ]);
-
 
 arch('factories')
     ->expect('Database\Factories')

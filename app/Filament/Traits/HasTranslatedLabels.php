@@ -8,17 +8,17 @@ trait HasTranslatedLabels
 {
     public static function getNavigationLabel(): string
     {
-        return __('FilamentResourceNavigationLabel' . static::getResourceName());
+        return __('FilamentResourceNavigationLabel'.static::getResourceName());
     }
 
     public static function getModelLabel(): string
     {
-        return __('FilamentResourceModelLabel' . static::getResourceName());
+        return __('FilamentResourceModelLabel'.static::getResourceName());
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('FilamentResourcePluralModelLabel' . static::getResourceName());
+        return __('FilamentResourcePluralModelLabel'.static::getResourceName());
     }
 
     protected static function getResourceName(): string

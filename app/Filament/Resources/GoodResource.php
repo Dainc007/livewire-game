@@ -26,7 +26,7 @@ final class GoodResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('description'),
                 Forms\Components\TextInput::make('icon'),
-                Forms\Components\Toggle::make('is_active')
+                Forms\Components\Toggle::make('is_active'),
             ]);
     }
 

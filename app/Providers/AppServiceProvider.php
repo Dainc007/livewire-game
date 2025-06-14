@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Services\LogService;
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use Carbon\CarbonImmutable;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
@@ -13,12 +14,11 @@ use Filament\Infolists\Components\Entry;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\ServiceProvider;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -106,13 +106,13 @@ final class AppServiceProvider extends ServiceProvider
 
     private function configureTranslationKeysLogging(): void
     {
-        LogService::shouldLogMissingTranslationKeys(!$this->app->isProduction());
+        LogService::shouldLogMissingTranslationKeys(! $this->app->isProduction());
     }
 
     private function configureFilamentTranslations(): void
     {
         array_map(
-            fn($class) => $class::configureUsing(fn($instance) => $instance->translateLabel()),
+            fn ($class) => $class::configureUsing(fn ($instance) => $instance->translateLabel()),
             [Column::class, Filter::class, Field::class, Entry::class, Action::class, Component::class]
         );
     }

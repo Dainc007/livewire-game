@@ -1,31 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\Models\Building;
 use App\Models\Game;
-use App\Models\User;
 use App\Models\Good;
 use App\Models\Unit;
-use App\Models\Building;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
-class ResourceService
+final class ResourceService
 {
-
     /**
      * Create a new class instance.
      */
     public function __construct(
         protected Game $record,
         protected User $user,
-    )
-    {
-    }
+    ) {}
 
     public function createManyGoods(): static
     {
         $goods = [];
-        Good::isActive()->get()->each(function($good) use (&$goods) {
+        Good::isActive()->get()->each(function ($good) use (&$goods): void {
             $goods[] = [
                 'game_id' => $this->record->id,
                 'user_id' => $this->user->id,
@@ -41,10 +40,10 @@ class ResourceService
         return $this;
     }
 
-    public function createManyUnits()
+    public function createManyUnits(): static
     {
         $units = [];
-        Unit::isActive()->get()->each(function($unit) use (&$units) {
+        Unit::isActive()->get()->each(function ($unit) use (&$units): void {
             $units[] = [
                 'game_id' => $this->record->id,
                 'user_id' => $this->user->id,
@@ -60,10 +59,10 @@ class ResourceService
         return $this;
     }
 
-    public function createManyBuildings()
+    public function createManyBuildings(): static
     {
         $buildings = [];
-        Building::isActive()->get()->each(function($building) use (&$buildings) {
+        Building::isActive()->get()->each(function ($building) use (&$buildings): void {
             $buildings[] = [
                 'game_id' => $this->record->id,
                 'user_id' => $this->user->id,

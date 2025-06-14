@@ -12,8 +12,6 @@ use App\Models\Field;
 use Filament\Actions;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\MaxWidth;
@@ -22,8 +20,9 @@ use Livewire\Attributes\On;
 
 final class ViewGame extends ViewRecord
 {
-    protected static string $resource = GameResource::class;
     public int $selectedField = 0;
+
+    protected static string $resource = GameResource::class;
 
     public function getFooterWidgets(): array
     {
@@ -37,6 +36,13 @@ final class ViewGame extends ViewRecord
         ];
     }
 
+    #[On('open-build-modal')]
+    public function openBuildModal(int $fieldId): void
+    {
+        $this->selectedField = $fieldId;
+        $this->mountAction('build');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -45,7 +51,8 @@ final class ViewGame extends ViewRecord
                 ->slideOver()
                 ->modalHeading(function () {
                     $field = Field::findOrFail($this->selectedField);
-                    return strtoupper( $field->field_type);
+
+                    return mb_strtoupper($field->field_type);
                 })
                 ->modalDescription(function ($record) {
                     $resources = $record
@@ -60,7 +67,7 @@ final class ViewGame extends ViewRecord
 
                     return $resources
                         ->map(function ($resource): string {
-                            return $resource->resourceable->icon . ' ' . $resource->resourceable->name;
+                            return $resource->resourceable->icon.' '.$resource->resourceable->name;
                         })->join(PHP_EOL);
                 })
                 ->modalSubmitActionLabel('Let\'s build!')
@@ -77,7 +84,7 @@ final class ViewGame extends ViewRecord
                                 ->get()
                                 ->mapWithKeys(function ($building) {
                                     return [
-                                        $building->id => $building->icon . ' ' . $building->name,
+                                        $building->id => $building->icon.' '.$building->name,
                                     ];
                                 })
                         )
@@ -100,31 +107,24 @@ final class ViewGame extends ViewRecord
                         )
                         ->columns(3)
                         ->inlineLabel(false)
-                        //use this when there is not enough resources.
+                        // use this when there is not enough resources.
 //                        ->disableOptionWhen(fn (string $value): bool => $value === 'published')
                         ->required(),
                 ])
-                ->action(function (array $data, $record, $livewire): \Filament\Notifications\Notification {
+                ->action(function (array $data, $record, $livewire): Notification {
                     $record->resources()->where('user_id', Auth::id())
                         ->where('resourceable_type', Building::class)
                         ->where('resourceable_id', $data['buildings'])
                         ->update([
                             'value' => 1,
-                            'field_id' => $livewire->selectedField
+                            'field_id' => $livewire->selectedField,
                         ]);
-                    
+
                     return Notification::make()
                         ->title(__('brawo!'))
                         ->body('budynek zbudowany')
                         ->success()->send();
-                })
+                }),
         ];
-    }
-
-    #[On('open-build-modal')]
-    public function openBuildModal(int $fieldId): void
-    {
-        $this->selectedField = $fieldId;
-        $this->mountAction('build');
     }
 }
