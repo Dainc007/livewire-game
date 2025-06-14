@@ -1,6 +1,6 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <div class="bg-gray-800 text-white">
+        <div class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
             <div class="container mx-auto px-2 sm:px-4">
                 <div class="flex flex-col sm:flex-row items-center justify-between py-2 gap-2">
                     <!-- Time Information -->
@@ -25,7 +25,7 @@
                                 @endif
                             @endforeach
                         @else
-                            <div class="text-xs text-gray-400">No resources available</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">No resources available</div>
                         @endif
                     </div>
                 </div>
